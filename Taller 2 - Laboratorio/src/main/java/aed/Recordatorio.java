@@ -1,6 +1,9 @@
 package aed;
 
 public class Recordatorio {
+    private String mensaje;
+    private Fecha fecha;
+    private Horario horario;
 
     public Recordatorio(String mensaje, Fecha fecha, Horario horario) {
         // Implementar
