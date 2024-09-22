@@ -1,8 +1,13 @@
 package aed;
 
 public class Fecha {
+    private int dia;
+    private int mes;
+
+
     public Fecha(int dia, int mes) {
-        // Implementar
+        this.dia = dia;
+        this.mes = mes;
     }
 
     public Fecha(Fecha fecha) {
@@ -10,28 +15,38 @@ public class Fecha {
     }
 
     public Integer dia() {
-        // Implementar
-        return -1;
+        return this.dia;
     }
 
     public Integer mes() {
-        // Implementar
-        return -1;
+        return this.mes;
     }
 
     public String toString() {
-        // Implementar
-        return "";
+        String dia_string = String.valueOf(this.dia);
+        String mes_string = String.valueOf(this.mes);
+        return dia_string + "/" + mes_string;
     }
 
     @Override
     public boolean equals(Object otra) {
-        // Implementar
-        return true;
+        if (this.getClass() != otra.getClass()) {
+        return false;
+        } else if (otra instanceof String){
+            return otra.equals(this.toString());
+        } else {
+            Fecha otra_casteada = (Fecha) otra;
+            return ((this.dia == otra_casteada.dia) && (this.mes == otra_casteada.mes));
+        }
     }
 
     public void incrementarDia() {
-        // Implementar
+        if (this.dia == diasEnMes(this.mes)) {
+            this.dia = 1;
+            this.mes += 1;
+        } else {
+            this.dia += 1;
+        }
     }
 
     private int diasEnMes(int mes) {
