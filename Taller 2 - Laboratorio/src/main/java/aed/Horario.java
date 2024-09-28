@@ -10,6 +10,12 @@ public class Horario {
         this.minutos = minutos;
     }
 
+    public Horario (Horario horario1) {
+        this.hora = horario1.hora;
+        this.minutos = horario1.minutos;
+    }
+// Constructor copia.
+
     public int hora() {
         return this.hora;
     }

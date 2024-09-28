@@ -11,8 +11,11 @@ public class Fecha {
     }
 
     public Fecha(Fecha fecha) {
-        // Implementar
+        this.dia = fecha.dia;
+        this.mes = fecha.mes;
     }
+// Este constructor es para crear una nueva fecha a partir de otra.
+// Lo utilizo como Constructor Copia.
 
     public Integer dia() {
         return this.dia;
@@ -41,7 +44,11 @@ public class Fecha {
     }
 
     public void incrementarDia() {
-        if (this.dia == diasEnMes(this.mes)) {
+        if (this.mes == 12 && this.dia == 31) {
+            this.dia = 1;
+            this.mes = 1;
+        }
+        else if (this.dia == diasEnMes(this.mes)) {
             this.dia = 1;
             this.mes += 1;
         } else {
