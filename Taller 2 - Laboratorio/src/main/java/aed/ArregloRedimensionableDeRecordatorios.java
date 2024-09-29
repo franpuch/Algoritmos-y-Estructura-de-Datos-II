@@ -2,28 +2,32 @@ package aed;
 
 class ArregloRedimensionableDeRecordatorios {
     private Recordatorio[] elementos;
-    private int tamaño;
+
+    public ArregloRedimensionableDeRecordatorios() {
+        this.elementos = new Recordatorio[0];
+    }
 
     public ArregloRedimensionableDeRecordatorios(Recordatorio[] recordatorios) {
         this.elementos = recordatorios;
-        this.tamaño = recordatorios.length;
     }
 
     public int longitud() {
-        return this.tamaño;
+        return this.elementos.length;
     }
 
     public void agregarAtras(Recordatorio i) {
         // Creo el nuevo array (donde voy a hacer la copia y agregar el nuevo elemento).
-        Recordatorio[] res = new Recordatorio[this.tamaño + 1];
+        Recordatorio[] res = new Recordatorio[this.elementos.length + 1];
 
         // Copio los elementos que había.
-        for (int j = 0 ; j < this.tamaño ; j++) {
-            res[j] = this.elementos[j];
+        if (this.elementos.length != 0) {
+            for (int j = 0 ; j < this.elementos.length ; j++) {
+                res[j] = this.elementos[j];
+            }
         }
-
+       
         // Añado el nuevo elemento (en la última posición del array).
-        res[this.tamaño] = i;
+        res[this.elementos.length] = i;
 
         // Modifico el puntero de this.elementos (le digo que apunte al nuevo array creado).
         this.elementos = res;
@@ -36,10 +40,10 @@ class ArregloRedimensionableDeRecordatorios {
 
     public void quitarAtras() {
         // Creo el nuevo array (donde voy a hacer la copia eliminando el último elemento).
-        Recordatorio[] res = new Recordatorio[this.tamaño - 1];
+        Recordatorio[] res = new Recordatorio[this.elementos.length - 1];
 
         // Copio los elementos hasta el ante-último (el último no).
-        for (int i = 0 ; i < this.tamaño - 1 ; i++) {
+        for (int i = 0 ; i < this.elementos.length - 1 ; i++) {
             res[i] = this.elementos[i];
         }
 
@@ -48,15 +52,28 @@ class ArregloRedimensionableDeRecordatorios {
     }
 
     public void modificarPosicion(int indice, Recordatorio valor) {
-        // Implementar
+        this.elementos[indice] = valor;
     }
 
     public ArregloRedimensionableDeRecordatorios(ArregloRedimensionableDeRecordatorios vector) {
-        // Implementar
+        // Creo un nuevo array (donde voy a hacer la copia).
+        Recordatorio[] elem = new Recordatorio[vector.elementos.length];
+
+        // Copio los elementos.
+        for (int i = 0 ; i < vector.elementos.length ; i++) {
+            elem[i] = vector.elementos[i];
+        }
+
+        // Defino el puntero de this.elementos (le digo que apunte al nuevo array creado).
+        this.elementos = elem;
     }
 
+    // ? No entiendo por qué el método devuelve otra instancia (y no simplemento el array).
+    // ? No estoy seguro de si puedo pasar 'this' como parámetro para (de cienta forma) decirle:
+    // ?    pasale al constructor el mismo objeto. 
+    // ? Pero funciono así que...
     public ArregloRedimensionableDeRecordatorios copiar() {
-        // Implementar
-        return null;
+        ArregloRedimensionableDeRecordatorios nuevo = new ArregloRedimensionableDeRecordatorios(this);
+        return nuevo;
     }
 }
