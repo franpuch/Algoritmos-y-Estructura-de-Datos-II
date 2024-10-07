@@ -159,23 +159,16 @@ public class ListaEnlazada<T> implements Secuencia<T> {
     }
 
     public ListaEnlazada(ListaEnlazada<T> lista) {
-        // Para evita aliasing, creo nuevos objetos (en el heap) que copien a los atributos
-        // que luego voy a redefinir.
-        Nodo nuevo_primer_elemento = new Nodo();
-        nuevo_primer_elemento.valor = lista.primer_elemento.valor;
-        nuevo_primer_elemento.anterior = lista.primer_elemento.anterior;
-        nuevo_primer_elemento.siguiente = lista.primer_elemento.siguiente;
+        int indice_actual = 0;
+        Nodo nodo_actual = lista.primer_elemento;
 
-        Nodo nuevo_ultimo_elemento = new Nodo();
-        nuevo_ultimo_elemento.valor = lista.ultimo_elemento.valor;
-        nuevo_ultimo_elemento.anterior = lista.ultimo_elemento.anterior;
-        nuevo_ultimo_elemento.siguiente = lista.ultimo_elemento.siguiente;
+        while (indice_actual != lista.nro_elementos) {
+            this.agregarAtras(nodo_actual.valor);
 
-        // ! El atributo 'nro_elementos', como es de tipo primitivo (int) si o si se pasa por copia.
+            nodo_actual = nodo_actual.siguiente;
 
-        this.nro_elementos = lista.nro_elementos;
-        this.primer_elemento = nuevo_primer_elemento;
-        this.ultimo_elemento = nuevo_ultimo_elemento;
+            indice_actual += 1;
+        }
     }
     
     @Override
@@ -206,29 +199,80 @@ public class ListaEnlazada<T> implements Secuencia<T> {
         return res;
     }
 
+// ------------------------------------------------------------------------------------------ //
+
     private class ListaIterador implements Iterador<T> {
-    	// Completar atributos privados
+    	// Atributos privados.
+        private Nodo nodo_apuntado;
 
         public boolean haySiguiente() {
-	        throw new UnsupportedOperationException("No implementada aun");
+	        if (nodo_apuntado.siguiente != null) {
+                return true;
+            } else {
+                return false;
+            }
         }
         
         public boolean hayAnterior() {
-	        throw new UnsupportedOperationException("No implementada aun");
+	        return nodo_apuntado.anterior != null;
         }
+        // Basicamente mismo fin que el método 'haySiguiente()', pero en una sola linea.
 
         public T siguiente() {
-	        throw new UnsupportedOperationException("No implementada aun");
+	        if (nodo_apuntado.siguiente != null) {
+                nodo_apuntado = nodo_apuntado.siguiente;
+                T res = nodo_apuntado.valor;
+                return res;
+            } else {
+                throw new NoSuchElementException("No hay más elementos");
+            }
         }
-        
+        // Si se intenta avanzar desde el último elemento de la lista, arrojo una excepción.
 
         public T anterior() {
-	        throw new UnsupportedOperationException("No implementada aun");
+	        if (nodo_apuntado.anterior != null) {
+                T res = nodo_apuntado.valor;
+                nodo_apuntado = nodo_apuntado.anterior;
+                return res;
+            } else {
+                throw new NoSuchElementException("No hay más elementos anteriores");
+            }
         }
+        // Si se intenta retroceder desde el primer elemento de la lista, arrojo una excepción.
     }
 
     public Iterador<T> iterador() {
-	    throw new UnsupportedOperationException("No implementada aun");
+	    ListaIterador iterador = new ListaIterador();
+
+        // Primero atajo el caso de la lista vacía. Luego en el 'else' atajo lo demás.
+        if (this.nro_elementos == 0) {
+            // Creo un nodo vacío.
+            Nodo nodo_vacio = new Nodo();
+            nodo_vacio.anterior = null;
+            nodo_vacio.siguiente = null;
+
+            // El atributo 'nodo_actual' del iterador apunta al nodo vacío.
+            iterador.nodo_apuntado = nodo_vacio;
+
+            // Devuelvo el iterador.
+            return iterador;
+        } else {
+            // Creo una copia de la lista.
+            ListaEnlazada<T> lista_iterable = new ListaEnlazada<>(this);
+
+            // A la copia creada (que es la lista sobre la que va a iterar el iterador) le agrego
+            // al principio un 'nodo ubicador'. Este nuevo nodo, es un nodo cuyo atributo
+            // 'anterior' apunta a 'null'; pero el atributo 'siguiente' apunta el ex primer elemento.
+            // ! OBS -> El 'valor' de este 'nodo_ubicador' no me importa, nunca voy a acceder a él.
+            // !        Para que no se me rompan los tipos, le pongo un valor repetido.
+            lista_iterable.agregarAdelante(this.obtener(0));
+
+            // El atributo 'nodo_apuntado' (del iterador) apunta al primer elemento de esta copia.
+            iterador.nodo_apuntado = lista_iterable.primer_elemento;
+
+            // Devuelvo el iterador.
+            return iterador;
+        }
     }
 
 }
