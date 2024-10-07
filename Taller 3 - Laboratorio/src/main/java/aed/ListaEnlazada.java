@@ -180,7 +180,30 @@ public class ListaEnlazada<T> implements Secuencia<T> {
     
     @Override
     public String toString() {
-        throw new UnsupportedOperationException("No implementada aun");
+        String res = "[";
+        int indice = 0;
+        Nodo elem_actual = this.primer_elemento;
+
+        while (indice != this.nro_elementos - 1) {
+            // Copio el valor que quiero añadir.
+            T valor_de_nodo = elem_actual.valor;
+            // Lo casteo a String.
+            String.valueOf(valor_de_nodo);
+            // Lo añado a res.
+            res = res + valor_de_nodo + ", ";
+            // Cambio a 'elem_actual' por el siguiente.
+            elem_actual = elem_actual.siguiente;
+            // Avanzo el índice (recién me olvidé y se me colgó el ciclo jejeje).
+            indice += 1;
+        }
+
+        // Ahora añado el último elemento (que cierra el corchete)
+        T ultimo_elemento = this.ultimo_elemento.valor;
+        String.valueOf(ultimo_elemento);
+        res = res + ultimo_elemento + "]";
+
+        // Finalmente, devuelvo el String completo.
+        return res;
     }
 
     private class ListaIterador implements Iterador<T> {
